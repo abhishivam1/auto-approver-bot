@@ -12,7 +12,8 @@ ADMIN_FILE = "admins_bot_2.json"
 
 FORWARD_LINKS = [
     "https://t.me/forwardingthecontent/6",
-    "https://t.me/forwardingthecontent/7"
+    "https://t.me/forwardingthecontent/7",
+    "https://t.me/forwardingthecontent/8"
 ]
 
 if not os.path.exists(ADMIN_FILE):
