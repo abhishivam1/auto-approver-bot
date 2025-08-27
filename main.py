@@ -7,13 +7,13 @@ import re
 
 API_ID = 751980
 API_HASH = "1481687e152a07f5f4881deccf2235dd"
-BOT_TOKEN = "7783028792:AAGEqQkz7tlp1Z_F69vGvShEmORXvq8gw1o"
+BOT_TOKEN = "8314093526:AAFeuBcEnWJWY0HlN2LmmmW6MgsHuckRtj4"
 ADMIN_FILE = "admins_bot_2.json"
 
 FORWARD_LINKS = [
-    "https://t.me/forwardingthecontent/6",
-    "https://t.me/forwardingthecontent/7",
-    "https://t.me/forwardingthecontent/8"
+    "https://t.me/minato123910/2",
+    "https://t.me/minato123910/3",
+    "https://t.me/minato123910/4"
 ]
 
 if not os.path.exists(ADMIN_FILE):
