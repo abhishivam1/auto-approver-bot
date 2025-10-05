@@ -11,9 +11,9 @@ BOT_TOKEN = "8314093526:AAFeuBcEnWJWY0HlN2LmmmW6MgsHuckRtj4"
 ADMIN_FILE = "admins_bot_2.json"
 
 FORWARD_LINKS = [
-    "https://t.me/minato123910/2",
-    "https://t.me/minato123910/3",
-    "https://t.me/minato123910/4"
+    "https://t.me/msgforward69/2",
+    "https://t.me/msgforward69/3",
+    "https://t.me/msgforward69/4"
 ]
 
 if not os.path.exists(ADMIN_FILE):
