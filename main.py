@@ -12,6 +12,8 @@ API_ID = 751980
 API_HASH = "1481687e152a07f5f4881deccf2235dd"
 BOT_TOKEN = "7550064879:AAExJAk5zB_7vsNdMjaC1H221jbCv5b7Omw"
 
+OWNER_ID = 5253533929
+
 ADMIN_FILE = "admins_bot_2.json"
 USERS_FILE = "users_bot_2.json"
 
@@ -34,6 +36,11 @@ with open(ADMIN_FILE, "r") as f:
 
 with open(USERS_FILE, "r") as f:
     USERS = json.load(f)
+
+if OWNER_ID not in ADMINS:
+    ADMINS.append(OWNER_ID)
+    with open(ADMIN_FILE, "w") as f:
+        json.dump(ADMINS, f)
 
 app = Client(
     "join_bot_2",
@@ -66,16 +73,16 @@ async def start(client, message: Message):
 
 @app.on_message(filters.command("addadmin") & filters.private)
 async def add_admin(client, message: Message):
-    if message.from_user.id not in ADMINS:
-        return await message.reply("❌ You are not authorized to add admins.")
+    if message.from_user.id != OWNER_ID:
+        return await message.reply("❌ Only owner can add admins.")
     if len(message.command) < 2:
         return await message.reply("Usage: /addadmin <user_id>")
     try:
-        new_admin = int(message.command[1])
-        if new_admin not in ADMINS:
-            ADMINS.append(new_admin)
+        uid = int(message.command[1])
+        if uid not in ADMINS:
+            ADMINS.append(uid)
             save_admins()
-            await message.reply(f"✅ User {new_admin} added as admin.")
+            await message.reply(f"✅ User {uid} added as admin.")
         else:
             await message.reply("ℹ️ User is already an admin.")
     except ValueError:
@@ -84,13 +91,13 @@ async def add_admin(client, message: Message):
 @app.on_message(filters.command("adminlist") & filters.private)
 async def list_admins(client, message: Message):
     if message.from_user.id not in ADMINS:
-        return await message.reply("❌ You are not authorized.")
+        return await message.reply("❌ Not authorized.")
     await message.reply("👤 Admins:\n" + "\n".join(map(str, ADMINS)))
 
 @app.on_message(filters.command("broadcast") & filters.private & filters.reply)
 async def broadcast(client, message: Message):
     if message.from_user.id not in ADMINS:
-        return await message.reply("❌ You are not authorized.")
+        return await message.reply("❌ Not authorized.")
     sent = 0
     failed = 0
     for uid in USERS:
