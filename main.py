@@ -94,6 +94,12 @@ async def list_admins(client, message: Message):
         return await message.reply("❌ Not authorized.")
     await message.reply("👤 Admins:\n" + "\n".join(map(str, ADMINS)))
 
+@app.on_message(filters.command("users") & filters.private)
+async def users_count(client, message: Message):
+    if message.from_user.id not in ADMINS:
+        return await message.reply("❌ Not authorized.")
+    await message.reply(f"👥 Total users: {len(USERS)}")
+
 @app.on_message(filters.command("broadcast") & filters.private & filters.reply)
 async def broadcast(client, message: Message):
     if message.from_user.id not in ADMINS:
