@@ -13,6 +13,7 @@ API_HASH = "1481687e152a07f5f4881deccf2235dd"
 BOT_TOKEN = "7550064879:AAExJAk5zB_7vsNdMjaC1H221jbCv5b7Omw"
 
 ADMIN_FILE = "admins_bot_2.json"
+USERS_FILE = "users_bot_2.json"
 
 FORWARD_LINKS = [
     "https://t.me/msgforward69/2",
@@ -24,8 +25,15 @@ if not os.path.exists(ADMIN_FILE):
     with open(ADMIN_FILE, "w") as f:
         json.dump([], f)
 
+if not os.path.exists(USERS_FILE):
+    with open(USERS_FILE, "w") as f:
+        json.dump([], f)
+
 with open(ADMIN_FILE, "r") as f:
     ADMINS = json.load(f)
+
+with open(USERS_FILE, "r") as f:
+    USERS = json.load(f)
 
 app = Client(
     "join_bot_2",
@@ -38,11 +46,23 @@ def save_admins():
     with open(ADMIN_FILE, "w") as f:
         json.dump(ADMINS, f)
 
+def save_users():
+    with open(USERS_FILE, "w") as f:
+        json.dump(USERS, f)
+
 def parse_link(link):
     match = re.match(r"https?://t\.me/([^/]+)/(\d+)", link)
     if match:
         return match.group(1), int(match.group(2))
     return None, None
+
+@app.on_message(filters.command("start") & filters.private)
+async def start(client, message: Message):
+    uid = message.from_user.id
+    if uid not in USERS:
+        USERS.append(uid)
+        save_users()
+    await message.reply("👋 Welcome to the bot!\nThis is made by @prohubc")
 
 @app.on_message(filters.command("addadmin") & filters.private)
 async def add_admin(client, message: Message):
@@ -67,9 +87,20 @@ async def list_admins(client, message: Message):
         return await message.reply("❌ You are not authorized.")
     await message.reply("👤 Admins:\n" + "\n".join(map(str, ADMINS)))
 
-@app.on_message(filters.command("start") & filters.private)
-async def start(client, message: Message):
-    await message.reply("👋 Welcome to the bot!\nThis is made by @prohubc")
+@app.on_message(filters.command("broadcast") & filters.private & filters.reply)
+async def broadcast(client, message: Message):
+    if message.from_user.id not in ADMINS:
+        return await message.reply("❌ You are not authorized.")
+    sent = 0
+    failed = 0
+    for uid in USERS:
+        try:
+            await message.reply_to_message.copy(chat_id=uid)
+            await asyncio.sleep(0.2)
+            sent += 1
+        except:
+            failed += 1
+    await message.reply(f"📢 Broadcast finished\n\n✅ Sent: {sent}\n❌ Failed: {failed}")
 
 @app.on_chat_join_request()
 async def approve_and_copy_links(client: Client, join_request: ChatJoinRequest):
